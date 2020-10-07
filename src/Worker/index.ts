@@ -1,3 +1,3 @@
 import Worker from './Worker';
 
-Worker.executeAsync();
+export default new Worker();
