@@ -1,3 +1,5 @@
 import Worker from './Worker';
 
-Worker.executeAsync();
+const worker = new Worker();
+
+worker.executeAsync();

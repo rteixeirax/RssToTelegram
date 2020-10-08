@@ -1,7 +1,6 @@
 export interface NotificationMessage {
   sent: boolean;
-  header: string;
   title: string;
-  description: string;
+  content: string;
   date: string;
 }

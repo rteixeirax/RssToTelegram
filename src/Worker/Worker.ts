@@ -2,10 +2,10 @@ import { NotificationMessage } from '../@types/NotificationMessage';
 import services from '../services';
 
 class Worker {
-  private notification: NotificationMessage | null;
+  private message: NotificationMessage | null;
 
   constructor() {
-    this.notification = null;
+    this.message = null;
   }
 
   async executeAsync(): Promise<void> {
@@ -22,35 +22,38 @@ class Worker {
   }
 
   async refreshNotificationsAsync(): Promise<void> {
-    const data = await services.fetchNotificationsAsync();
+    const notifications = await services.fetchNotificationsAsync();
 
-    console.log('=> data: ', data);
+    console.log('=> notifications: ', notifications);
 
-    if (data) {
-      /**
-       * 1.Order the notification by date;
-       * 2.Get the most recent;
-       * 3.If this.notification is null, set it with the most recent notification;
-       * 4.If this.notification has data, compare the dates and if the most recent notification
-       * is more recent, set this.notification with it;
-       * 5.Sent the new notification;
-       */
+    if (notifications) {
+      // If there is no message in "cache", set it with the most recent notification.
+      if (!this.message) {
+        this.message = { sent: false, ...notifications[0] };
 
-      // set the new notification
-      this.notification = {
-        sent: false,
-        header: data.title,
-        ...data.notifications[0],
-      };
+        // Check each notification and if it is newer, sent a new message.
+      } else {
+        for (let i = 0; i < notifications.length; i += 1) {
+          const notification = notifications[i];
+
+          if (Date.parse(notification.date) > Date.parse(this.message.date)) {
+            this.message = { sent: false, ...notification };
+
+            // eslint-disable-next-line no-await-in-loop
+            await this.sendMessage();
+          }
+        }
+      }
     }
   }
 
   sendMessage(): void {
-    if (this.notification && !this.notification.sent) {
-      console.log('New notification...');
+    if (this.message && !this.message.sent) {
+      // eslint-disable-next-line no-console
+      console.log('Send new message...');
 
-      // Mark the notification has sent
-      this.notification.sent = true;
+      // Mark the notification as sent
+      this.message.sent = true;
     }
   }
 }
