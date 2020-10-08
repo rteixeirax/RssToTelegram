@@ -15,7 +15,6 @@ class Worker {
     console.time('Time');
 
     await this.refreshNotificationsAsync();
-    this.sendMessage();
 
     // eslint-disable-next-line no-console
     console.timeEnd('Time');
@@ -40,14 +39,14 @@ class Worker {
             this.message = { sent: false, ...notification };
 
             // eslint-disable-next-line no-await-in-loop
-            await this.sendMessage();
+            await this.sendMessageAsync();
           }
         }
       }
     }
   }
 
-  sendMessage(): void {
+  async sendMessageAsync(): Promise<void> {
     if (this.message && !this.message.sent) {
       // eslint-disable-next-line no-console
       console.log('Send new message...');
