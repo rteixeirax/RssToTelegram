@@ -1,3 +1,3 @@
-# SIDE Bot
+# RssToTelegram
 
-Fetch notifications from SIDE and send them to telegram.
+Fetch notifications from the RSS url and send them to telegram.

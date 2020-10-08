@@ -1,7 +1,7 @@
 {
-  "name": "sidebot",
+  "name": "rss-to-telegram",
   "version": "1.0.0",
-  "description": "Fetch notifications from SIDE and send them to telegram",
+  "description": "Fetch notifications from the RSS url and send them to telegram.",
   "main": "startup.js",
   "scripts": {
     "build": "rimraf build && tsc --p tsconfig.json",
