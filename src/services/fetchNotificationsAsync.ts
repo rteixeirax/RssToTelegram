@@ -8,12 +8,6 @@ import { NotificationReponse } from '../@types/NotificationReponse';
  * notifications ordered by date.
  */
 const fetchNotificationsAsync = async (): Promise<NotificationReponse[] | null> => {
-  if (!process.env.RSS_XML_DATA_URL) {
-    // eslint-disable-next-line no-console
-    console.error('Missing .env variable: RSS_XML_DATA_URL');
-    process.exit(1);
-  }
-
   try {
     const parser = new RSSParser({
       headers: {
@@ -21,7 +15,7 @@ const fetchNotificationsAsync = async (): Promise<NotificationReponse[] | null> 
       },
     });
 
-    const data = await parser.parseURL(process.env.RSS_XML_DATA_URL);
+    const data = await parser.parseURL(process.env.RSS_XML_DATA_URL!);
 
     if (data?.items?.length) {
       const notifications = data?.items.map((item: Item) => ({

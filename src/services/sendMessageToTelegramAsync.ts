@@ -1,4 +1,5 @@
 import { Telegram } from 'telegraf';
+import TurndownService from 'turndown';
 
 import { NotificationMessage } from '../@types/NotificationMessage';
 
@@ -7,25 +8,17 @@ import { NotificationMessage } from '../@types/NotificationMessage';
  * @param message
  */
 const sendMessageToTelegramAsync = async (message: NotificationMessage): Promise<void> => {
-  if (!process.env.TELEGRAM_BOT_TOKEN) {
-    // eslint-disable-next-line no-console
-    console.error('Missing .env variable: TELEGRAM_BOT_TOKEN');
-    process.exit(1);
-  }
-
-  if (!process.env.TELEGRAM_CHAT_ID) {
-    // eslint-disable-next-line no-console
-    console.error('Missing .env variable: TELEGRAM_CHAT_ID');
-    process.exit(1);
-  }
-
   try {
-    const telegram = new Telegram(process.env.TELEGRAM_BOT_TOKEN);
+    const telegram = new Telegram(process.env.TELEGRAM_BOT_TOKEN!);
+
+    // Clear the html tags and convert them in Markdown
+    const turndownService = new TurndownService();
+    const msgContent = turndownService.turndown(message.content);
 
     // Send message
     const bot = await telegram.sendMessage(
-      process.env.TELEGRAM_CHAT_ID,
-      `*${message.title}*\n${message.content}\n\n_${new Date(message.date).toLocaleString()}_`,
+      process.env.TELEGRAM_CHAT_ID!,
+      `*${message.title}*\n${msgContent}\n\n_${new Date(message.date).toLocaleString()}_`,
       { parse_mode: 'Markdown' },
     );
 
