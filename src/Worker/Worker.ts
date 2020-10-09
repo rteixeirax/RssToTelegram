@@ -1,16 +1,34 @@
+import { Telegram } from 'telegraf';
+import TurndownService from 'turndown';
+
 import { NotificationMessage } from '../@types/NotificationMessage';
 import services from '../services';
 
 class Worker {
-  private message: NotificationMessage | null;
+  private telegramBot: Telegram;
+  private turndownService: TurndownService;
+  private lastMessageDate: string | null;
 
   constructor() {
-    this.message = null;
+    this.telegramBot = new Telegram(process.env.TELEGRAM_BOT_TOKEN!);
+    this.turndownService = new TurndownService();
+    this.lastMessageDate = null;
+  }
+
+  async startAsync(): Promise<void> {
+    // Execute on the boot.
+    await this.executeAsync();
+
+    // Convert minutes to milliseconds
+    const refreshInterval = parseInt(process.env.REFRESH_INTERVAL_MINUTES!, 10) * 60 * 1000;
+
+    // After the first request, execute on every REFRESH_INTERVAL_MINUTES
+    setInterval(() => { this.executeAsync(); }, refreshInterval);
   }
 
   async executeAsync(): Promise<void> {
     // eslint-disable-next-line no-console
-    console.log('Executed at', new Date().toUTCString());
+    console.log('\nExecuted at', new Date().toLocaleString());
     // eslint-disable-next-line no-console
     console.time('Duration');
 
@@ -23,38 +41,37 @@ class Worker {
   async refreshNotificationsAsync(): Promise<void> {
     const notifications = await services.fetchNotificationsAsync();
 
-    // console.log('=> notifications: ', notifications);
-
     if (notifications) {
       // If there is no message in "cache", set it with the most recent notification.
-      if (!this.message) {
-        this.message = { sent: false, ...notifications[0] };
-
+      if (!this.lastMessageDate) {
         // eslint-disable-next-line no-await-in-loop
-        await this.sendMessageAsync();
+        await this.sendMessageAsync(notifications[0]);
 
         // Check each notification and if it is newer, sent a new message.
       } else {
-        for (let i = 0; i < notifications.length; i += 1) {
+        // We need to iterate through the array backwards to make sure
+        // all new notifications are send and not only the newest...
+        for (let i = (notifications.length - 1); i >= 0; i -= 1) {
           const notification = notifications[i];
 
-          if (Date.parse(notification.date) > Date.parse(this.message.date)) {
-            this.message = { sent: false, ...notification };
-
+          if (Date.parse(notification.date) > Date.parse(this.lastMessageDate)) {
             // eslint-disable-next-line no-await-in-loop
-            await this.sendMessageAsync();
+            await this.sendMessageAsync(notification);
           }
         }
       }
     }
   }
 
-  async sendMessageAsync(): Promise<void> {
-    if (this.message && !this.message.sent) {
-      await services.sendMessageToTelegramAsync(this.message);
+  async sendMessageAsync(message: NotificationMessage): Promise<void> {
+    const success = await services.sendTelegramMessageAsync(
+      this.telegramBot,
+      this.turndownService,
+      message,
+    );
 
-      // Mark the notification as sent
-      this.message.sent = true;
+    if (success) {
+      this.lastMessageDate = message.date;
     }
   }
 }

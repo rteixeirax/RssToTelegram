@@ -1,7 +1,7 @@
 import fetchNotificationsAsync from './fetchNotificationsAsync';
-import sendMessageToTelegramAsync from './sendMessageToTelegramAsync';
+import sendTelegramMessageAsync from './sendTelegramMessageAsync';
 
 export default {
   fetchNotificationsAsync,
-  sendMessageToTelegramAsync,
+  sendTelegramMessageAsync,
 };
