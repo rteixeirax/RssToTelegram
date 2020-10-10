@@ -1,6 +1,7 @@
 import { Telegram } from 'telegraf';
 import TurndownService from 'turndown';
 import { NotificationMessage } from '../@types/NotificationMessage';
+import consoleWriteLine from '../utils/consoleWriteLine';
 
 /**
  * Send the given message to telegram
@@ -25,17 +26,15 @@ const sendTelegramMessageAsync = async (
       { parse_mode: 'Markdown' }
     );
 
-    /* eslint-disable no-console */
-    console.log('Message ID:', botResponse.message_id);
-    console.log(
-      'Message receiver:',
-      botResponse.chat.first_name ?? '',
-      botResponse.chat.last_name ?? ''
+    consoleWriteLine(
+      `Message ID: ${botResponse.message_id} | Receiver: ${
+        botResponse.chat.first_name ?? ''
+      } ${botResponse.chat.last_name ?? ''}`
     );
 
     return true;
   } catch (error) {
-    console.error('Fail to send message..');
+    consoleWriteLine('Fail to send message..', false, true);
 
     return false;
   }

@@ -1,6 +1,7 @@
 import RSSParser, { Item } from 'rss-parser';
 
 import { NotificationReponse } from '../@types/NotificationReponse';
+import consoleWriteLine from '../utils/consoleWriteLine';
 
 /**
  * Get the data from the given URL, parse the XML to JavaScript object,
@@ -34,8 +35,8 @@ const fetchNotificationsAsync = async (): Promise<
 
     return null;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Fail to fetch data..');
+    consoleWriteLine('Fail to fetch data..', false, true);
+
     return null;
   }
 };

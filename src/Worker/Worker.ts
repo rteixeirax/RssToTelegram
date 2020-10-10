@@ -2,6 +2,7 @@ import { Telegram } from 'telegraf';
 import TurndownService from 'turndown';
 
 import { NotificationMessage } from '../@types/NotificationMessage';
+import consoleWriteLine from '../utils/consoleWriteLine';
 import services from '../services';
 
 class Worker {
@@ -30,15 +31,13 @@ class Worker {
   }
 
   async executeAsync(): Promise<void> {
-    // eslint-disable-next-line no-console
-    console.log('\nExecuted at', new Date().toLocaleString());
-    // eslint-disable-next-line no-console
-    console.time('Duration');
+    consoleWriteLine('Executed..', true);
+    const begin = Date.now();
 
     await this.refreshNotificationsAsync();
 
-    // eslint-disable-next-line no-console
-    console.timeEnd('Duration');
+    const end = Date.now();
+    consoleWriteLine(`Duration: ${end - begin}ms`);
   }
 
   async refreshNotificationsAsync(): Promise<void> {
