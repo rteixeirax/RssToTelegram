@@ -10,7 +10,7 @@ import { NotificationMessage } from '../@types/NotificationMessage';
 const sendTelegramMessageAsync = async (
   telegramBot: Telegram,
   turndownService: TurndownService,
-  message: NotificationMessage,
+  message: NotificationMessage
 ): Promise<boolean> => {
   try {
     // Clear the html tags and convert them in Markdown
@@ -19,13 +19,19 @@ const sendTelegramMessageAsync = async (
     // Send message
     const botResponse = await telegramBot.sendMessage(
       process.env.TELEGRAM_CHAT_ID!,
-      `*${message.title}*\n${msgContent}\n\n_${new Date(message.date).toLocaleString()}_`,
-      { parse_mode: 'Markdown' },
+      `*${message.title}*\n\n${msgContent}\n\n_${new Date(
+        message.date
+      ).toLocaleString()}_`,
+      { parse_mode: 'Markdown' }
     );
 
     /* eslint-disable no-console */
     console.log('Message ID:', botResponse.message_id);
-    console.log('Message receiver:', botResponse.chat.first_name ?? '', botResponse.chat.last_name ?? '');
+    console.log(
+      'Message receiver:',
+      botResponse.chat.first_name ?? '',
+      botResponse.chat.last_name ?? ''
+    );
 
     return true;
   } catch (error) {

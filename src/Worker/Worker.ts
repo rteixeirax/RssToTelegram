@@ -20,10 +20,13 @@ class Worker {
     await this.executeAsync();
 
     // Convert minutes to milliseconds
-    const refreshInterval = parseInt(process.env.REFRESH_INTERVAL_MINUTES!, 10) * 60 * 1000;
+    const refreshInterval =
+      parseInt(process.env.REFRESH_INTERVAL_MINUTES!, 10) * 60 * 1000;
 
     // After the first request, execute on every REFRESH_INTERVAL_MINUTES
-    setInterval(() => { this.executeAsync(); }, refreshInterval);
+    setInterval(() => {
+      this.executeAsync();
+    }, refreshInterval);
   }
 
   async executeAsync(): Promise<void> {
@@ -51,10 +54,12 @@ class Worker {
       } else {
         // We need to iterate through the array backwards to make sure
         // all new notifications are send and not only the newest...
-        for (let i = (notifications.length - 1); i >= 0; i -= 1) {
+        for (let i = notifications.length - 1; i >= 0; i -= 1) {
           const notification = notifications[i];
 
-          if (Date.parse(notification.date) > Date.parse(this.lastMessageDate)) {
+          if (
+            Date.parse(notification.date) > Date.parse(this.lastMessageDate)
+          ) {
             // eslint-disable-next-line no-await-in-loop
             await this.sendMessageAsync(notification);
           }
@@ -67,7 +72,7 @@ class Worker {
     const success = await services.sendTelegramMessageAsync(
       this.telegramBot,
       this.turndownService,
-      message,
+      message
     );
 
     if (success) {

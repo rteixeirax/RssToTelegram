@@ -7,11 +7,14 @@ import { NotificationReponse } from '../@types/NotificationReponse';
  * prepares the data for each notification and return an array with all the
  * notifications ordered by date.
  */
-const fetchNotificationsAsync = async (): Promise<NotificationReponse[] | null> => {
+const fetchNotificationsAsync = async (): Promise<
+  NotificationReponse[] | null
+> => {
   try {
     const parser = new RSSParser({
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
       },
     });
 
@@ -24,7 +27,9 @@ const fetchNotificationsAsync = async (): Promise<NotificationReponse[] | null> 
         date: item.pubDate ?? '',
       }));
 
-      return notifications.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      return notifications.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
     }
 
     return null;
