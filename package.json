@@ -5,7 +5,7 @@
   "main": "startup.js",
   "scripts": {
     "build": "rimraf build && tsc --p tsconfig.json",
-    "start": "env-cmd -f ./.env node ./build/startup.js",
+    "start": "node ./build/startup.js",
     "dev": "env-cmd -f ./.env.dev.local nodemon --exec ts-node ./src/startup.ts",
     "lint": "eslint src --fix --ext .js,.ts"
   },
