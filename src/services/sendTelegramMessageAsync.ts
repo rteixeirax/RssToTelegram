@@ -22,7 +22,7 @@ const sendTelegramMessageAsync = async (
       process.env.TELEGRAM_CHAT_ID!,
       `*${message.title}*\n\n${msgContent}\n\n_${new Date(
         message.date
-      ).toLocaleString()}_`,
+      ).toLocaleString(process.env.DATE_LOCALE)}_`,
       { parse_mode: 'Markdown' }
     );
 

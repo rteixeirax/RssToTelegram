@@ -5,6 +5,10 @@
 const checkEnvVariables = (): void => {
   const errors: string[] = ['Missing enviroment variable(s):'];
 
+  if (!process.env.DATE_LOCALE) {
+    errors.push('DATE_LOCALE');
+  }
+
   if (!process.env.REFRESH_INTERVAL_MINUTES) {
     errors.push('REFRESH_INTERVAL_MINUTES');
   }
