@@ -1,5 +1,5 @@
 # -- BUILD STAGE --------------------------------
-FROM node:14.13.1-alpine AS build
+FROM node:12-alpine AS build
 
 # Create app directory
 WORKDIR /app
