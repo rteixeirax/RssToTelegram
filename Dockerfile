@@ -1,5 +1,5 @@
 # -- BUILD STAGE --------------------------------
-FROM node:12-alpine AS build
+FROM node:14.13.1-alpine AS build
 
 # Create app directory
 WORKDIR /app
@@ -23,7 +23,6 @@ FROM node:12-alpine AS runtime
 
 WORKDIR /app
 
-COPY --from=build /app/.env /app/.env
 COPY --from=build /app/package.json /app/package.json
 COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/build /app/build
