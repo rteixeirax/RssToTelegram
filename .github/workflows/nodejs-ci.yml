@@ -5,13 +5,10 @@ name: Create Release
 
 on:
   push:
-    branches: [ main ]
     # Sequence of patterns matched against refs/tags
     tags:
         - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-  pull_request:
-    branches: [ main ]
- 
+
 jobs:
   build:
     name: Create Release
@@ -36,22 +33,13 @@ jobs:
       - name: Run lint
         run: npm run lint
         
-      - name: Build
-        run: npm run build --if-present
-        
-      - run: mkdir dist
-      - run: mv .env dist/
-      - run: mv package.json dist/
-      - run: mv build dist/
-      - run: cd dist     
-        
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref/tags/[tag] }}
+          release_name: Release ${{ github.ref/tags/[tag] }}
           draft: false
           prerelease: false
