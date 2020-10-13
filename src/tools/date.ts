@@ -40,7 +40,7 @@ const now = (): Dayjs => {
 };
 
 const setLocal = (): void => {
-  const locale = require(`dayjs/locale/${process.env.DATE_LOCALE?.toLocaleLowerCase()}`);
+  const locale = require(`dayjs/locale/${process.env.DATE_LOCALE?.toLowerCase()}`);
 
   dayjs.extend(localizedFormat).locale(locale);
 };
