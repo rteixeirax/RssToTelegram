@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-    name: Create Release
     runs-on: ubuntu-latest
 
     strategy:
