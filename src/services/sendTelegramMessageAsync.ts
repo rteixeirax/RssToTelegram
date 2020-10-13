@@ -1,6 +1,7 @@
 import { Telegram } from 'telegraf';
 import TurndownService from 'turndown';
 import { NotificationMessage } from '../@types/NotificationMessage';
+import date from '../tools/date';
 import consoleWriteLine from '../utils/consoleWriteLine';
 
 /**
@@ -20,9 +21,7 @@ const sendTelegramMessageAsync = async (
     // Send message
     const botResponse = await telegramBot.sendMessage(
       process.env.TELEGRAM_CHAT_ID!,
-      `*${message.title}*\n\n${msgContent}\n\n_${new Date(
-        message.date
-      ).toLocaleString(process.env.DATE_LOCALE)}_`,
+      `*${message.title}*\n\n${msgContent}\n\n_${date.display(message.date)}_`,
       { parse_mode: 'Markdown' }
     );
 

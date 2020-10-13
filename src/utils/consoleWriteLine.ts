@@ -1,3 +1,5 @@
+import date from '../tools/date';
+
 const consoleWriteLine = (
   log: string,
   inNextLine = false,
@@ -5,9 +7,7 @@ const consoleWriteLine = (
 ): void =>
   // eslint-disable-next-line no-console
   console[error ? 'error' : 'log'](
-    `${inNextLine ? '\n' : ''}[${new Date().toLocaleString(
-      process.env.DATE_LOCALE!
-    )}] ${log}`
+    `${inNextLine ? '\n' : ''}[${date.displayNow()}] ${log}`
   );
 
 export default consoleWriteLine;

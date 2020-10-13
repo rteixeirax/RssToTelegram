@@ -4,6 +4,7 @@ import TurndownService from 'turndown';
 import { NotificationMessage } from '../@types/NotificationMessage';
 import consoleWriteLine from '../utils/consoleWriteLine';
 import services from '../services';
+import date from '../tools/date';
 
 class Worker {
   private telegramBot: Telegram;
@@ -32,16 +33,19 @@ class Worker {
 
   async executeAsync(): Promise<void> {
     consoleWriteLine('Executed..', true);
-    const begin = Date.now();
+
+    const begin = date.now();
 
     await this.refreshNotificationsAsync();
 
-    const end = Date.now();
-    consoleWriteLine(`Duration: ${end - begin}ms`);
+    const end = date.now();
+    consoleWriteLine(`Duration: ${date.diff(end, begin)}ms`);
   }
 
   async refreshNotificationsAsync(): Promise<void> {
     const notifications = await services.fetchNotificationsAsync();
+
+    // console.log('=> notifications: ', notifications);
 
     if (notifications) {
       // If there is no message in "cache", set it with the most recent notification.
@@ -56,9 +60,7 @@ class Worker {
         for (let i = notifications.length - 1; i >= 0; i -= 1) {
           const notification = notifications[i];
 
-          if (
-            Date.parse(notification.date) > Date.parse(this.lastMessageDate)
-          ) {
+          if (date.isAfter(this.lastMessageDate, notification.date)) {
             // eslint-disable-next-line no-await-in-loop
             await this.sendMessageAsync(notification);
           }

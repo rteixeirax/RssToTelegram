@@ -1,6 +1,7 @@
 import RSSParser, { Item } from 'rss-parser';
 
 import { NotificationReponse } from '../@types/NotificationReponse';
+import date from '../tools/date';
 import consoleWriteLine from '../utils/consoleWriteLine';
 
 /**
@@ -28,9 +29,7 @@ const fetchNotificationsAsync = async (): Promise<
         date: item.pubDate ?? '',
       }));
 
-      return notifications.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
+      return notifications.sort((a, b) => date.diff(b.date, a.date));
     }
 
     return null;
