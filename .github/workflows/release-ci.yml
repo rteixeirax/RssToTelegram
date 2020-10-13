@@ -10,8 +10,8 @@ on:
         - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  build:
-    name: Build
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     
     strategy:
@@ -34,8 +34,8 @@ jobs:
         run: npm run lint
         
   deploy:
-    needs: build
-    name: Push Docker image to Docker Hub
+    needs: lint
+    name: Deploy
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -54,7 +54,7 @@ jobs:
         run: npm ci
         
       - name: Push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
