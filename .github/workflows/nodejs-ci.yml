@@ -6,6 +6,9 @@ name: Create Release
 on:
   push:
     branches: [ main ]
+    # Sequence of patterns matched against refs/tags
+    tags:
+        - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   pull_request:
     branches: [ main ]
  
@@ -13,9 +16,34 @@ jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [12.x]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+         node-version: ${{ matrix.node-version }}
+         
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run lint
+        run: npm run lint
+        
+      - name: Build
+        run: npm run build --if-present
+        
+      - run: mkdir dist
+      - run: mv .env dist/
+      - run: mv package.json dist/
+      - run: mv build dist/
+      - run: cd dist     
         
       - name: Create Release
         id: create_release
@@ -25,9 +53,5 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
           draft: false
           prerelease: false
