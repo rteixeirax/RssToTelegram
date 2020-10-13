@@ -16,6 +16,7 @@
     "url": "https://github.com/ricardotx/RssToTelegram.git"
   },
   "dependencies": {
+    "dayjs": "^1.9.3",
     "rss-parser": "^3.9.0",
     "telegraf": "^3.38.0",
     "turndown": "^6.0.0"
