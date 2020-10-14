@@ -60,6 +60,32 @@ jobs:
         run: npm prune --production --no-audit
 
       # https://github.com/docker/build-push-action
+      - name: Prepare DockerHub tags
+        id: prep
+        run: |
+          DOCKER_IMAGE=${{ secrets.DOCKER_REPOSITORY }}
+          VERSION=edge
+
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=pr-${{ github.event.number }}
+          fi
+
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+
+          if [ "${{ github.event_name }}" = "push" ]; then
+           TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
+          fi
+
+          TAGS="${DOCKER_IMAGE}:latest"
+
+          echo ::set-output name=version::${VERSION}
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -77,8 +103,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: |
-             ${{ secrets.DOCKER_REPOSITORY }}:latest
+          tags: ${{ steps.prep.outputs.tags }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
