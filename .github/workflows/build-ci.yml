@@ -58,6 +58,9 @@ jobs:
 
       - name: Remove dev packages
         run: npm prune --production --no-audit
+       
+      - name: Set env
+        run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
 
       # https://github.com/docker/build-push-action
       - name: Set up QEMU
@@ -78,7 +81,7 @@ jobs:
         with:
           push: true
           tags: |
-             ${{ secrets.DOCKER_REPOSITORY }}:${{ github.ref }}
+             ${{ secrets.DOCKER_REPOSITORY }}:${{ env.RELEASE_VERSION  }}
              ${{ secrets.DOCKER_REPOSITORY }}:latest
 
       - name: Image digest
