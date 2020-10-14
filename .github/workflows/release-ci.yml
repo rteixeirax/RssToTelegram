@@ -63,4 +63,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_REPOSITORY }}
           tag_with_ref: true
-          tags: ${{ secrets.DOCKER_REPOSITORY }}:latest
+          tags: "latest"
