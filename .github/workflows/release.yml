@@ -15,6 +15,10 @@ jobs:
        node: ['12']
 
     steps:
+      # Setting up enviroment variables
+      - name: Set .env variables
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        
       # https://github.com/actions/checkout
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,10 +33,7 @@ jobs:
         run: npm ci --production
 
       - name: Remove dev packages
-        run: npm prune --production --no-audit
-      
-      - name: Set .env variables
-        run: echo "{RELEASE_VERSION}={${GITHUB_REF#refs/*/}}" >> $GITHUB_ENV
+        run: npm prune --production --no-audit     
 
       # https://github.com/docker/build-push-action
       - name: Set up QEMU
