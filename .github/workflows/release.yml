@@ -15,8 +15,7 @@ jobs:
        node: ['12']
 
     steps:
-      # Setting up enviroment variables
-      - name: Set .env variables
+      - name: Setting up enviroment variables
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
         
       # https://github.com/actions/checkout
