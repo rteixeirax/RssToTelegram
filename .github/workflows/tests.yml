@@ -51,10 +51,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
          node-version: ${{ matrix.node }}
-         
-      - name: Set up .env
-        run: echo seting up..
-        env: 
+                    
+      # https://github.com/marketplace/actions/set-env
+      - name: set environment variables
+        uses: allenevans/set-env@v1.0.0
+        with:
           RELEASE_VERSION: :${GITHUB_REF#refs/*/}
 
       - name: Install dependencies
