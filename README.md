@@ -7,11 +7,13 @@
 [![Build](https://github.com/ricardotx/RssToTelegram/workflows/Build/badge.svg)](https://github.com/ricardotx/RssToTelegram/actions?query=workflow%3ABuild)
 
 
-Fetch notifications from the RSS url and send them to telegram.
+This is a simple container app that will fetch the XML from the RSS url and send the latest items as notification to your **Telegram** *bot*.
+
+*Set the interval between each fetch in an easy way so you don't miss anything.*
 
 # Usage
 
-To use as a docker container, you can do it by using ***docker-compose*** or ***docker cli***.
+👉 You can do it by using ***docker-compose*** or ***docker cli***.
 
 ### Docker-compose
 
