@@ -3,7 +3,6 @@
 [![Licence](https://img.shields.io/github/license/ricardotx/RssToTelegram?label=Licence&logo=github)](https://github.com/ricardotx/RssToTelegram/blob/main/LICENSE)
 [![GitHub Release](https://img.shields.io/github/v/release/ricardotx/RssToTelegram?logo=github&label=Release)](https://github.com/ricardotx/RssToTelegram/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/ricardotx/rss-to-telegram?logo=docker&label=Pulls)](https://hub.docker.com/r/ricardotx/rss-to-telegram)
-
 [![Tests](https://github.com/ricardotx/RssToTelegram/workflows/Tests/badge.svg)](https://github.com/ricardotx/RssToTelegram/actions?query=workflow%3ATests)
 [![Build](https://github.com/ricardotx/RssToTelegram/workflows/Build/badge.svg)](https://github.com/ricardotx/RssToTelegram/actions?query=workflow%3ABuild)
 
