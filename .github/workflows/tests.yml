@@ -54,7 +54,7 @@ jobs:
                     
       # https://github.com/marketplace/actions/set-env
       - name: Set environment variables
-        run: echo setting up...
+        run: echo setting up... ${{ github.ref }}
         env:
           RELEASE_VERSION: ${{ github.ref }}
 
