@@ -57,6 +57,3 @@ jobs:
         
       - name: Build it
         run: npm run build
-
-      - name: Echo .env
-        run: echo ${GITHUB_REF#refs/*/}
