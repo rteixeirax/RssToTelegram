@@ -1,6 +1,6 @@
 {
   "name": "rss-to-telegram",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Fetch notifications from the RSS url and send them to telegram.",
   "main": "startup.js",
   "scripts": {
