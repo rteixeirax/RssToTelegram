@@ -1,7 +1,8 @@
-import date from './tools/date';
-import checkEnvVariables from './utils/checkEnvVariables';
-import consoleWriteLine from './utils/consoleWriteLine';
-import Worker from './Worker';
+import consoleWriteLine from './core/tools/consoleWriteLine';
+import date from './core/tools/date';
+import { checkEnvVariables } from './core/validators';
+
+import Worker from './app/Worker';
 
 // Verify if all .env variables are set before continue.
 checkEnvVariables();

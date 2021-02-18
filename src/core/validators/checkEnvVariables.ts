@@ -1,27 +1,35 @@
+import {
+  DATE_LOCALE,
+  REFRESH_INTERVAL_MINUTES,
+  RSS_XML_DATA_URL,
+  TELEGRAM_BOT_TOKEN,
+  TELEGRAM_CHAT_ID,
+} from '../constants';
+
 /**
  * Check if all the needed .env variables are set.
  * If not, show the missing ones and stop the app.
  */
-const checkEnvVariables = (): void => {
+export const checkEnvVariables = (): void => {
   const errors: string[] = ['Missing enviroment variable(s):'];
 
-  if (!process.env.DATE_LOCALE) {
+  if (!DATE_LOCALE) {
     errors.push('DATE_LOCALE');
   }
 
-  if (!process.env.REFRESH_INTERVAL_MINUTES) {
+  if (!REFRESH_INTERVAL_MINUTES) {
     errors.push('REFRESH_INTERVAL_MINUTES');
   }
 
-  if (!process.env.RSS_XML_DATA_URL) {
+  if (!RSS_XML_DATA_URL) {
     errors.push('RSS_XML_DATA_URL');
   }
 
-  if (!process.env.TELEGRAM_BOT_TOKEN) {
+  if (!TELEGRAM_BOT_TOKEN) {
     errors.push('TELEGRAM_BOT_TOKEN');
   }
 
-  if (!process.env.TELEGRAM_CHAT_ID) {
+  if (!TELEGRAM_CHAT_ID) {
     errors.push('TELEGRAM_CHAT_ID');
   }
 
@@ -35,5 +43,3 @@ const checkEnvVariables = (): void => {
     process.exit(1);
   }
 };
-
-export default checkEnvVariables;

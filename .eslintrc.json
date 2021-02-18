@@ -35,6 +35,7 @@
     "no-shadow": "warn",
     "prefer-destructuring": "off",
     "import/no-cycle": "off",
+    "import/prefer-default-export": "off",
     "lines-between-class-members": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/explicit-function-return-type": "off",

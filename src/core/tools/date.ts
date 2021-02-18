@@ -4,6 +4,8 @@
 import dayjs, { Dayjs } from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 
+import { DATE_LOCALE } from '../constants';
+
 const diff = (date1: string | Dayjs, date2: string | Dayjs): number => {
   let theDate1;
   let theDate2;
@@ -40,7 +42,7 @@ const now = (): Dayjs => {
 };
 
 const setLocal = (): void => {
-  const locale = require(`dayjs/locale/${process.env.DATE_LOCALE?.toLowerCase()}`);
+  const locale = require(`dayjs/locale/${DATE_LOCALE?.toLowerCase()}`);
 
   dayjs.extend(localizedFormat).locale(locale);
 };
