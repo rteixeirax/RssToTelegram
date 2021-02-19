@@ -9,3 +9,6 @@ npm-debug.log*
 
 # local env files
 .env.*.local
+
+# coverage files
+coverage
