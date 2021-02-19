@@ -1,4 +1,4 @@
-import { REFRESH_INTERVAL_MINUTES } from '../core/constants';
+import { IS_TEST, REFRESH_INTERVAL_MINUTES } from '../core/constants';
 
 import consoleWriteLine from '../core/tools/consoleWriteLine';
 import date from '../core/tools/date';
@@ -12,23 +12,26 @@ class Worker {
     this.notification = new Notification();
   }
 
-  async startAsync(): Promise<void> {
-    // Execute the boot.
+  async init(): Promise<void> {
+    // Execute the first time.
     await this.executeAsync();
 
     // Convert minutes to milliseconds
-    const refreshInterval = parseInt(REFRESH_INTERVAL_MINUTES!, 10) * 60 * 1000;
+    const refreshInterval = parseInt(REFRESH_INTERVAL_MINUTES, 10) * 60 * 1000;
 
-    // After the first request, execute on every REFRESH_INTERVAL_MINUTES
-    setInterval(() => {
-      this.executeAsync();
-    }, refreshInterval);
+    /* istanbul ignore next */
+    if (!IS_TEST) {
+      // After the first request, execute on every REFRESH_INTERVAL_MINUTES
+      setInterval(() => {
+        this.executeAsync();
+      }, refreshInterval);
+    }
   }
 
   async executeAsync(): Promise<void> {
     consoleWriteLine('Executed..', true);
     const begin = date.now();
-    await this.notification.refreshAsync();
+    await this.notification.init();
     const end = date.now();
     consoleWriteLine(`Duration: ${date.diff(end, begin)}ms`);
   }

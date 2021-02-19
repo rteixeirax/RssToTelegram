@@ -1,4 +1,11 @@
 export interface IWorker {
-  startAsync(): Promise<void>;
+  /**
+   * Init the worker process
+   */
+  init(): Promise<void>;
+
+  /**
+   * Execute the worker
+   */
   executeAsync(): Promise<void>;
 }

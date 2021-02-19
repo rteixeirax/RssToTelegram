@@ -17,4 +17,4 @@ consoleWriteLine('Up and running..');
 const worker = new Worker();
 
 // Start our worker
-worker.startAsync();
+worker.init();
