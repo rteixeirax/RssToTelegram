@@ -32,9 +32,34 @@ jobs:
 
       - name: Run lint
         run: npm run lint
+  
+  tests:
+    needs: lint
+    name: Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+       node: ['12']
+
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # https://github.com/actions/setup-node
+      - name: Set up Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+         node-version: ${{ matrix.node }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run test
+        run: npm run test
 
   build:
-    needs: lint
+    needs: tests
     name: Build
     runs-on: ubuntu-latest
     strategy:
