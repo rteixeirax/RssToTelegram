@@ -2,10 +2,19 @@ import { NotificationMessage } from '../types';
 
 export interface INotification {
   /**
-   * Get the data from the given URL, parse the XML to JavaScript object,
-   * prepares the data for each notification and send the most recent notifications to telegram
+   * Init the notification process
    */
-  refreshAsync(): Promise<void>;
+  init(): Promise<void>;
+
+  /**
+   * Get the data from the given URL and parse the XML to JavaScript object.
+   */
+  fetchAsync(): Promise<any>;
+
+  /**
+   * Prepares the data for each notification and send the most recent notifications to telegram
+   */
+  refreshAsync(data: any): Promise<void>;
 
   /**
    * Send the given message to telegram

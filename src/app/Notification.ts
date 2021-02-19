@@ -2,7 +2,7 @@ import RSSParser, { Item } from 'rss-parser';
 import { Telegraf } from 'telegraf';
 import TurndownService from 'turndown';
 
-import { RSS_XML_DATA_URL, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } from '../core/constants';
+import { IS_TEST, RSS_XML_DATA_URL, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } from '../core/constants';
 
 import consoleWriteLine from '../core/tools/consoleWriteLine';
 import date from '../core/tools/date';
@@ -21,7 +21,13 @@ class Notification implements INotification {
     this.lastMessageDate = null;
   }
 
-  async refreshAsync(): Promise<void> {
+  async init(): Promise<void> {
+    const data = await this.fetchAsync();
+    await this.refreshAsync(data);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async fetchAsync(): Promise<any> {
     try {
       const parser = new RSSParser({
         headers: {
@@ -30,40 +36,53 @@ class Notification implements INotification {
         },
       });
 
-      // Get the data from the RSS url.
-      const data = await parser.parseURL(RSS_XML_DATA_URL);
+      /* istanbul ignore next */
+      if (!IS_TEST) {
+        // Get the data from the RSS url and parse the XML to JavaScript object.
+        const data = await parser.parseURL(RSS_XML_DATA_URL);
+        return data;
+      }
 
-      if (data?.items?.length) {
-        // Prepare each notification data
-        const preparedData = data?.items.map((item: Item) => ({
-          title: item.title ?? '',
-          content: item.content ?? '',
-          date: item.pubDate ?? '',
-        }));
+      return null;
+      /* istanbul ignore next */
+    } catch (error) {
+      consoleWriteLine('Fail to fetch data..', false, true);
+      return null;
+    }
+  }
 
-        // Order the notification by date
-        const notifications = preparedData.sort((a, b) => date.diff(b.date, a.date));
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  async refreshAsync(data: any): Promise<void> {
+    if (data?.items?.length) {
+      // Prepare each notification data
+      const preparedData = data?.items.map((item: Item) => ({
+        title: item.title ?? '',
+        content: item.content ?? '',
+        date: item.pubDate ?? '',
+      }));
 
-        // If there is no message in "cache", set it with the most recent notification.
-        if (!this.lastMessageDate) {
-          await this.sendAsync(notifications[0]);
+      // Order the notification by date
+      const notifications = preparedData.sort((a: any, b: any) => {
+        return date.diff(b.date, a.date);
+      });
 
-          // Check each notification and if it is newer, sent a new message.
-        } else {
-          // We need to iterate through the array backwards to make sure
-          // all new notifications are send and not only the newest...
-          for (let i = notifications.length - 1; i >= 0; i -= 1) {
-            const notification = notifications[i];
+      // If there is no message in "cache", set it with the most recent notification.
+      if (!this.lastMessageDate) {
+        await this.sendAsync(notifications[0]);
 
-            if (date.isAfter(this.lastMessageDate, notification.date)) {
-              // eslint-disable-next-line no-await-in-loop
-              await this.sendAsync(notification);
-            }
+        // Check each notification and if it is newer, sent a new message.
+      } else {
+        // We need to iterate through the array backwards to make sure
+        // all new notifications are send and not only the newest...
+        for (let i = notifications.length - 1; i >= 0; i -= 1) {
+          const notification = notifications[i];
+
+          if (date.isAfter(this.lastMessageDate, notification.date)) {
+            // eslint-disable-next-line no-await-in-loop
+            await this.sendAsync(notification);
           }
         }
       }
-    } catch (error) {
-      consoleWriteLine('Fail to fetch data..', false, true);
     }
   }
 
@@ -73,20 +92,25 @@ class Notification implements INotification {
       const msgContent = this.turndownService.turndown(message.content);
 
       // Send message
-      const botResponse = await this.bot.telegram.sendMessage(
-        TELEGRAM_CHAT_ID,
-        `*${message.title}*\n\n${msgContent}\n\n_${date.display(message.date)}_`,
-        { parse_mode: 'Markdown' }
-      );
+      /* istanbul ignore next */
+      if (!IS_TEST) {
+        const botResponse = await this.bot.telegram.sendMessage(
+          TELEGRAM_CHAT_ID,
+          `*${message.title}*\n\n${msgContent}\n\n_${date.display(message.date)}_`,
+          { parse_mode: 'Markdown' }
+        );
+
+        consoleWriteLine(
+          `Message ID: ${botResponse.message_id} | Receiver: ${
+            (botResponse.chat as any).first_name ?? ''
+          } ${(botResponse.chat as any).last_name ?? ''}`
+        );
+      }
 
       // Save the date of the last notification sent.
       this.lastMessageDate = message.date;
 
-      consoleWriteLine(
-        `Message ID: ${botResponse.message_id} | Receiver: ${
-          (botResponse.chat as any).first_name ?? ''
-        } ${(botResponse.chat as any).last_name ?? ''}`
-      );
+      /* istanbul ignore next */
     } catch (error) {
       consoleWriteLine('Fail to send message..', false, true);
     }
