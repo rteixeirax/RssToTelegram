@@ -1,10 +1,10 @@
 # RssToTelegram (rss-to-telegram)
 
-[![Licence](https://img.shields.io/github/license/ricardotx/RssToTelegram?label=Licence&logo=github)](https://github.com/ricardotx/RssToTelegram/blob/main/LICENSE)
-[![GitHub Release](https://img.shields.io/github/v/release/ricardotx/RssToTelegram?logo=github&label=Release)](https://github.com/ricardotx/RssToTelegram/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/ricardotx/rss-to-telegram?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/ricardotx/rss-to-telegram)
-[![CI](https://github.com/ricardotx/RssToTelegram/workflows/CI/badge.svg?branch=main)](https://github.com/ricardotx/RssToTelegram/actions?query=workflow%3ACI)
-[![CD](https://github.com/ricardotx/RssToTelegram/workflows/CD/badge.svg)](https://github.com/ricardotx/RssToTelegram/actions?query=workflow%3ACD)
+[![Licence](https://img.shields.io/github/license/rteixeirax/RssToTelegram?label=Licence&logo=github)](https://github.com/ricardotx/RssToTelegram/blob/main/LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/rteixeirax/RssToTelegram?logo=github&label=Release)](https://github.com/rteixeirax/RssToTelegram/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/rteixeirax/rss-to-telegram?logo=docker&label=Docker%20pulls)](https://hub.docker.com/r/ricardotx/rss-to-telegram)
+[![CI](https://github.com/rteixeirax/RssToTelegram/workflows/CI/badge.svg?branch=main)](https://github.com/ricardotx/RssToTelegram/actions?query=workflow%3ACI)
+[![CD](https://github.com/rteixeirax/RssToTelegram/workflows/CD/badge.svg)](https://github.com/ricardotx/RssToTelegram/actions?query=workflow%3ACD)
 
 This is a simple container app that will fetch the XML from the RSS url and send the latest items as notification to your **Telegram** *bot*.
 
@@ -21,7 +21,7 @@ version: "3"
 services:
   rss-to-telegram:
     container_name: rss-to-telegram
-    image: ricardotx/rss-to-telegram
+    image: rteixeirax/rss-to-telegram
     restart: unless-stopped
     environment:
       - DATE_LOCALE=pt
@@ -42,7 +42,7 @@ docker run -d \
   -e TELEGRAM_CHAT_ID=your_telegram_chat_id \
   -e TELEGRAM_BOT_TOKEN=your_telegram_bot_token \
   --restart unless-stopped \
-  ricardotx/rss-to-telegram
+  rteixeirax/rss-to-telegram
 ````
 
 ## Environment  variables
